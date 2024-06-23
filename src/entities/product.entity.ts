@@ -15,12 +15,6 @@ export class Product {
   }
 
   constructor(props: ProductProps) {
-    const { name } = props;
-
-    if (name === '') {
-      throw new Error('The name field cannot be null');
-    }
-
     this.props = props;
   }
 }

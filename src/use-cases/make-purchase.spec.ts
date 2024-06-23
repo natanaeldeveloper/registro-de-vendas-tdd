@@ -1,18 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { Buyer } from '../entities/buyer.entity';
+import { Product } from '../entities/product.entity';
+import { Sale } from '../entities/sale.entity';
 import { MakePurchase } from './make-purchase.use-case';
-import { Buyer } from 'src/entities/buyer.entity';
-import { Product } from 'src/entities/product.entity';
-import { Sale } from 'src/entities/sale.entity';
 
 describe('make-purchase.spec.ts', () => {
   let useCase: MakePurchase;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [MakePurchase],
-    }).compile();
-
-    useCase = module.get<MakePurchase>(MakePurchase);
+    useCase = new MakePurchase();
   });
 
   it('Make a purchase', async () => {
@@ -28,9 +24,16 @@ describe('make-purchase.spec.ts', () => {
           name: 'Tapioca',
           price: 3.0,
         }),
+        new Product({
+          name: 'Hot-dog',
+          price: 3.0,
+        }),
       ],
     });
 
     expect(sale).toBeInstanceOf(Sale);
+    expect(sale.products).toHaveLength(2);
+    expect(sale.products[1].name).toEqual('Hot-dog');
+    expect(sale.buyer.name).toEqual('Natanael Oliveira');
   });
 });
