@@ -9,10 +9,10 @@ export interface MakePurchaseProps {
   amountPaid: number;
 }
 
-export type MakePurchaseResponse = Sale;
+export type MakePurchaseResponse = Promise<Sale>;
 
 export class MakePurchase {
-  execute(props: MakePurchaseProps): MakePurchaseResponse {
+  async execute(props: MakePurchaseProps): MakePurchaseResponse {
     const { amountPaid, amountToPay, buyer, products } = props;
 
     const sale = new Sale({

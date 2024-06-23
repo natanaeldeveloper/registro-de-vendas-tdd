@@ -7,12 +7,12 @@ import { MakePurchase } from './make-purchase.use-case';
 describe('make-purchase.spec.ts', () => {
   let useCase: MakePurchase;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     useCase = new MakePurchase();
   });
 
   it('Make a purchase', async () => {
-    const sale = useCase.execute({
+    const sale = await useCase.execute({
       amountToPay: 6.0,
       amountPaid: 6.0,
       buyer: new Buyer({

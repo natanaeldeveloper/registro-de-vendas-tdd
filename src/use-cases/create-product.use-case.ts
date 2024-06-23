@@ -3,7 +3,7 @@ import { Product } from '../entities/product.entity';
 import { validate } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 
-export type CreateProductResponse = Product;
+export type CreateProductResponse = Promise<Product>;
 
 @Injectable()
 export class CreateProduct {
