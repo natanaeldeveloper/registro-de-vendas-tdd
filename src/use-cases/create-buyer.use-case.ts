@@ -1,24 +1,19 @@
-import { validate } from 'class-validator';
+import { Injectable } from '@nestjs/common';
 import { CreateBuyerDto } from 'src/dtos/create-buyer.dto';
 import { Buyer } from 'src/entities/buyer.entity';
+import { validateDto } from 'src/utils/validate-dto.util';
 
 export type CreateBuyerResponse = Buyer;
 
+@Injectable()
 export class CreateBuyer {
-  async execute(dto: CreateBuyerDto): Promise<CreateBuyerResponse> {
-    const validationErrors = await validate(dto);
+  async execute(dtoData: CreateBuyerDto): Promise<CreateBuyerResponse> {
+    const dto = new CreateBuyerDto();
+    Object.assign(dto, dtoData);
 
-    if (validationErrors.length > 0) {
-      throw new Error(
-        Object.values(validationErrors[0].constraints).join(', '),
-      );
-    }
+    await validateDto(dto);
 
-    const { name, email } = dto;
-    const buyer = new Buyer({
-      name,
-      email,
-    });
+    const buyer = new Buyer(dto);
 
     return buyer;
   }

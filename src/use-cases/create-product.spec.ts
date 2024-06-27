@@ -1,7 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { Product } from '../entities/product.entity';
 import { CreateProduct } from './create-product.use-case';
-import { CreateProductDto } from 'src/dtos/create-product.dto';
 
 describe('create-product.spec.ts', () => {
   let useCase: CreateProduct;
@@ -21,35 +20,29 @@ describe('create-product.spec.ts', () => {
   });
 
   it('Validate empty name field', async () => {
-    const dto = new CreateProductDto();
-
-    dto.name = '';
-    dto.price = 3;
-
     expect(async () => {
-      await useCase.execute(dto);
+      await useCase.execute({
+        name: '',
+        price: 3,
+      });
     }).rejects.toThrow('O campo nome deve ser informado.');
   });
 
   it('Validate negative price', async () => {
-    const dto = new CreateProductDto();
-
-    dto.name = 'Bolo de morango';
-    dto.price = -1;
-
     expect(async () => {
-      await useCase.execute(dto);
+      await useCase.execute({
+        name: 'Bolo  de morango',
+        price: -1,
+      });
     }).rejects.toThrow('O preço não pode ser negativo.');
   });
 
   it('Validate empty price', async () => {
-    const dto = new CreateProductDto();
-
-    dto.name = 'Bolo de morango';
-    dto.price = null;
-
     expect(async () => {
-      await useCase.execute(dto);
+      await useCase.execute({
+        name: 'Bolo de morango',
+        price: null,
+      });
     }).rejects.toThrow('O campo preço deve ser informado.');
   });
 });

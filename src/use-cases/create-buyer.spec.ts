@@ -1,7 +1,6 @@
+import { Buyer } from 'src/entities/buyer.entity';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CreateBuyer } from './create-buyer.use-case';
-import { Buyer } from 'src/entities/buyer.entity';
-import { CreateBuyerDto } from 'src/dtos/create-buyer.dto';
 
 describe('create-buyer.spec.ts', () => {
   let useCase: CreateBuyer;
@@ -22,35 +21,29 @@ describe('create-buyer.spec.ts', () => {
   });
 
   it('Validate empty name field', async () => {
-    const dto = new CreateBuyerDto();
-
-    dto.name = '';
-    dto.email = 'natanael@gmail.com';
-
     expect(async () => {
-      await useCase.execute(dto);
+      await useCase.execute({
+        name: '',
+        email: 'natanael@gmail.com',
+      });
     }).rejects.toThrow('O campo nome deve ser informado.');
   });
 
   it('Validate empty email field', async () => {
-    const dto = new CreateBuyerDto();
-
-    dto.name = 'natanael';
-    dto.email = '';
-
     expect(async () => {
-      await useCase.execute(dto);
+      await useCase.execute({
+        name: 'natanael',
+        email: '',
+      });
     }).rejects.toThrow('O campo email deve ser informado.');
   });
 
   it('Validate if the email field is to type email', async () => {
-    const dto = new CreateBuyerDto();
-
-    dto.name = 'natanael';
-    dto.email = 'natanael$#';
-
     expect(async () => {
-      await useCase.execute(dto);
+      await useCase.execute({
+        name: 'natanael',
+        email: 'natanael#4$',
+      });
     }).rejects.toThrow('O campo email deve ser do tipo email.');
   });
 });

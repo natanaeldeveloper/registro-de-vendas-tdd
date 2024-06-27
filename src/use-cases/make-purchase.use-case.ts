@@ -1,27 +1,34 @@
-import { Product } from '../entities/product.entity';
-import { Sale } from '../entities/sale.entity';
-import { Buyer } from '../entities/buyer.entity';
+import { Injectable } from '@nestjs/common';
+import { MakePurchaseDto } from 'src/dtos/make-purchase.dto';
+import { Purchase } from 'src/entities/purchase.entity';
+import { validateDto } from 'src/utils/validate-dto.util';
 
-export interface MakePurchaseProps {
-  products: Product[];
-  buyer: Buyer;
-  amountToPay: number;
-  amountPaid: number;
-}
+export type MakePurchaseResponse = Purchase;
 
-export type MakePurchaseResponse = Promise<Sale>;
-
+@Injectable()
 export class MakePurchase {
-  async execute(props: MakePurchaseProps): MakePurchaseResponse {
-    const { amountPaid, amountToPay, buyer, products } = props;
+  async execute(
+    dtoData: Partial<MakePurchaseDto>,
+  ): Promise<MakePurchaseResponse> {
+    const dto = new MakePurchaseDto();
+    Object.assign(dto, dtoData);
 
-    const sale = new Sale({
-      amountPaid,
-      amountToPay,
-      buyer,
-      products,
-    });
+    if (typeof dto.totalAmount == 'undefined') {
+      dto.totalAmount = dto.productsPurchased.reduce(
+        (total, item) => total + item.totalPrice,
+        0,
+      );
+    }
 
-    return sale;
+    if (typeof dto.amountToPay == 'undefined') {
+      const sum = dto.totalAmount - dto.amountPaid;
+      dto.amountToPay = sum < 0 ? 0 : sum;
+    }
+
+    await validateDto(dto);
+
+    const purchase = new Purchase(dto);
+
+    return purchase;
   }
 }

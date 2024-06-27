@@ -1,26 +1,20 @@
-import { CreateProductDto } from 'src/dtos/create-product.dto';
-import { Product } from '../entities/product.entity';
-import { validate } from 'class-validator';
 import { Injectable } from '@nestjs/common';
+import { CreateProductDto } from 'src/dtos/create-product.dto';
+import { validateDto } from 'src/utils/validate-dto.util';
+import { Product } from '../entities/product.entity';
 
-export type CreateProductResponse = Promise<Product>;
+export type CreateProductResponse = Product;
 
 @Injectable()
 export class CreateProduct {
-  async execute(dto: CreateProductDto): Promise<CreateProductResponse> {
-    const validationErrors = await validate(dto);
+  async execute(dtoData: CreateProductDto): Promise<CreateProductResponse> {
+    const dto = new CreateProductDto();
 
-    if (validationErrors.length > 0) {
-      throw new Error(
-        Object.values(validationErrors[0].constraints).join(', '),
-      );
-    }
+    Object.assign(dto, dtoData);
 
-    const { name, price } = dto;
-    const product = new Product({
-      name,
-      price,
-    });
+    await validateDto(dto);
+
+    const product = new Product(dto);
     return product;
   }
 }
