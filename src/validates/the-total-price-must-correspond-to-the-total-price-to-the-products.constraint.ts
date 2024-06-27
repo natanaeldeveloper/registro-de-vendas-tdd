@@ -17,7 +17,7 @@ export class TheTotalPriceMustCorrespondToTheTotalPriceToTheProductsConstraint
   }
 
   defaultMessage() {
-    return 'O preço total deve condizer com a quantidade de produto x preço por produto.';
+    return `O preço total dos produtos não corresponde a quantidade de produtos comprados.`;
   }
 }
 

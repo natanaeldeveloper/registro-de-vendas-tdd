@@ -1,4 +1,6 @@
 import { Purchase } from 'src/entities/purchase.entity';
+import { PurchaseCalculationDoesNotMatchConstraint } from 'src/validates/purchase-calculation-does-not-match.constraint';
+import { ThePurchasePriceDoesNotCorrespondToTheValueOfTheProductsPurchasedConstraint } from 'src/validates/the-purchase-price-does-not-correspond-to-value-of-the-products-purshased.constraint';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { AddProductToPurchase } from './add-product-to-purchase.use-case';
 import { CreateBuyer } from './create-buyer.use-case';
@@ -67,12 +69,12 @@ describe('make-purchase.spec.ts', () => {
       });
 
       await makePurchase.execute({
-        amountPaid: 999,
+        amountPaid: 999, //disparidade
         buyer: mockBuyer,
         productsPurchased: [mockProductToPurchase],
       });
     }).rejects.toThrow(
-      '"O valor pago" + "valor a pagar" não condiz com o valor real da compra.',
+      new PurchaseCalculationDoesNotMatchConstraint().defaultMessage(),
     );
   });
 
@@ -95,12 +97,12 @@ describe('make-purchase.spec.ts', () => {
 
       await makePurchase.execute({
         amountPaid: 6,
-        amountToPay: 100,
+        amountToPay: 100, //disparidade
         buyer: mockBuyer,
         productsPurchased: [mockProductToPurchase],
       });
     }).rejects.toThrow(
-      '"O valor pago" + "valor a pagar" não condiz com o valor real da compra.',
+      new PurchaseCalculationDoesNotMatchConstraint().defaultMessage(),
     );
   });
 
@@ -122,13 +124,14 @@ describe('make-purchase.spec.ts', () => {
       });
 
       await makePurchase.execute({
-        amountPaid: 1,
-        amountToPay: 1,
+        amountPaid: 1, //disparidade
+        amountToPay: 1, //disparidade
+        // totalAmount: 6
         buyer: mockBuyer,
         productsPurchased: [mockProductToPurchase],
       });
     }).rejects.toThrow(
-      '"O valor pago" + "valor a pagar" não condiz com o valor real da compra.',
+      new PurchaseCalculationDoesNotMatchConstraint().defaultMessage(),
     );
   });
 
@@ -156,7 +159,7 @@ describe('make-purchase.spec.ts', () => {
         productsPurchased: [mockProductToPurchase],
       });
     }).rejects.toThrow(
-      'O valor da compra não corresponde ao valor dos produtos comprados.',
+      new ThePurchasePriceDoesNotCorrespondToTheValueOfTheProductsPurchasedConstraint().defaultMessage(),
     );
   });
 });

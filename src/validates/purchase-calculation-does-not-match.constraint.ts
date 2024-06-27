@@ -17,7 +17,7 @@ export class PurchaseCalculationDoesNotMatchConstraint
   }
 
   defaultMessage() {
-    return '"O valor pago" + "valor a pagar" não condiz com o valor real da compra.';
+    return 'Há inconsistências entre o "valor a pagar", "valor pago" e "total da compra"';
   }
 }
 

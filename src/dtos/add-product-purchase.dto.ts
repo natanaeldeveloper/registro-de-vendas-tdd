@@ -1,6 +1,8 @@
-import { IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, Min, ValidateNested } from 'class-validator';
 import { Product } from 'src/entities/product.entity';
 import { TheTotalPriceMustCorrespondToTheTotalPriceToTheProducts } from 'src/validates/the-total-price-must-correspond-to-the-total-price-to-the-products.constraint';
+import 'reflect-metadata';
 
 export class AddProductPurchasedDto {
   @IsNumber()
@@ -9,8 +11,8 @@ export class AddProductPurchasedDto {
   count: number;
 
   @IsNotEmpty()
-  // @ValidateNested()
-  // @Type(() => Product)
+  @ValidateNested()
+  @Type(() => Product)
   product: Product;
 
   @IsNumber()
