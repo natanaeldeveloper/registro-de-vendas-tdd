@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { AddProductToPurchase } from './add-product-to-purchase.use-case';
-import { CreateProduct } from './create-product.use-case';
+import { CreateProduct } from './product/create-product.use-case';
 import { TheTotalPriceMustCorrespondToTheTotalPriceToTheProductsConstraint } from 'src/validates/the-total-price-must-correspond-to-the-total-price-to-the-products.constraint';
 import { ProductPurchased } from 'src/entities/product-purchased.entity';
 

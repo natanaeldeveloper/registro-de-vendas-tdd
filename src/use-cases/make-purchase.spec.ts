@@ -3,9 +3,9 @@ import { PurchaseCalculationDoesNotMatchConstraint } from 'src/validates/purchas
 import { ThePurchasePriceDoesNotCorrespondToTheValueOfTheProductsPurchasedConstraint } from 'src/validates/the-purchase-price-does-not-correspond-to-value-of-the-products-purshased.constraint';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { AddProductToPurchase } from './add-product-to-purchase.use-case';
-import { CreateBuyer } from './create-buyer.use-case';
-import { CreateProduct } from './create-product.use-case';
+import { CreateBuyer } from './buyer/create-buyer.use-case';
 import { MakePurchase } from './make-purchase.use-case';
+import { CreateProduct } from './product/create-product.use-case';
 
 describe('make-purchase.spec.ts', () => {
   let makePurchase: MakePurchase;
@@ -16,7 +16,6 @@ describe('make-purchase.spec.ts', () => {
   beforeEach(() => {
     makePurchase = new MakePurchase();
     createBuyer = new CreateBuyer();
-    createProduct = new CreateProduct();
     addProductToPurchase = new AddProductToPurchase();
   });
 
