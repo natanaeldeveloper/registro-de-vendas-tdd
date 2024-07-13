@@ -1,8 +1,9 @@
 import { Buyer } from './buyer.entity';
-import { ProductPurchased } from './product-purchased.entity';
+import { PurchaseProduct } from './purchase-product.entity';
 
 export interface PurchaseProps {
-  productsPurchased: ProductPurchased[];
+  id: number;
+  purchaseProducts: PurchaseProduct[];
   buyer: Buyer;
   totalAmount: number;
   amountToPay: number;
@@ -10,29 +11,24 @@ export interface PurchaseProps {
 }
 
 export class Purchase {
-  private props: PurchaseProps;
+  id: number;
 
-  get productsPurchased() {
-    return this.props.productsPurchased;
-  }
+  purchaseProducts: PurchaseProduct[];
 
-  get buyer() {
-    return this.props.buyer;
-  }
+  buyer: Buyer;
 
-  get totalAmount() {
-    return this.props.totalAmount;
-  }
+  totalAmount: number;
 
-  get amountToPay() {
-    return this.props.amountToPay;
-  }
+  amountToPay: number;
 
-  get amountPaid() {
-    return this.props.amountPaid;
-  }
+  amountPaid: number;
 
   constructor(props: PurchaseProps) {
-    this.props = props;
+    this.id = props.id;
+    this.purchaseProducts = props.purchaseProducts;
+    this.buyer = props.buyer;
+    this.totalAmount = props.totalAmount;
+    this.amountToPay = props.amountToPay;
+    this.amountPaid = props.amountPaid;
   }
 }

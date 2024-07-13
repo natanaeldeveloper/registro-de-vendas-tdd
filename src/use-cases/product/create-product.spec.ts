@@ -34,6 +34,7 @@ describe('create-product.spec.ts', () => {
     } catch (error) {
       expect(error).toHaveLength(1);
       expect(error[0]).toBeInstanceOf(ValidationError);
+      expect(error[0].property).toEqual('name');
       expect(error[0].constraints).toHaveProperty('isNotEmpty');
     }
   });
@@ -47,6 +48,7 @@ describe('create-product.spec.ts', () => {
     } catch (error) {
       expect(error).toHaveLength(1);
       expect(error[0]).toBeInstanceOf(ValidationError);
+      expect(error[0].property).toEqual('price');
       expect(error[0].constraints).toHaveProperty('isNotEmpty');
     }
   });
@@ -60,6 +62,7 @@ describe('create-product.spec.ts', () => {
     } catch (error) {
       expect(error).toHaveLength(1);
       expect(error[0]).toBeInstanceOf(ValidationError);
+      expect(error[0].property).toEqual('price');
       expect(error[0].constraints).toHaveProperty('min');
     }
   });

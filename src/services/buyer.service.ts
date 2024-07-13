@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 import { CreateBuyerDto } from 'src/dtos/create-buyer.dto';
 import { Buyer } from 'src/entities/buyer.entity';
 import { generateFakeId } from 'src/utils/faker.util';
 
+@Injectable()
 export class BuyerService {
   protected buyers: Buyer[];
 
@@ -16,8 +18,8 @@ export class BuyerService {
     await validateOrReject(dto);
 
     const buyer = new Buyer({
-      id: generateFakeId(),
       ...dto,
+      id: generateFakeId(),
     });
 
     this.buyers.push(buyer);

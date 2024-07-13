@@ -8,15 +8,14 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Buyer } from 'src/entities/buyer.entity';
-import { ProductPurchased } from 'src/entities/product-purchased.entity';
+import { PurchaseProduct } from 'src/entities/purchase-product.entity';
 import { PurchaseCalculationDoesNotMatch } from 'src/validates/purchase-calculation-does-not-match.constraint';
-import { ThePurchasePriceDoesNotCorrespondToTheValueOfTheProductsPurchased } from 'src/validates/the-purchase-price-does-not-correspond-to-value-of-the-products-purshased.constraint';
 
-export class MakePurchaseDto {
+export class CreatePurchaseDto {
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ProductPurchased)
-  productsPurchased: ProductPurchased[];
+  @Type(() => PurchaseProduct)
+  purchaseProducts: PurchaseProduct[];
 
   @IsNotEmpty()
   @ValidateNested()
@@ -26,7 +25,6 @@ export class MakePurchaseDto {
   @IsNumber()
   @IsPositive()
   @PurchaseCalculationDoesNotMatch()
-  @ThePurchasePriceDoesNotCorrespondToTheValueOfTheProductsPurchased()
   totalAmount: number;
 
   @IsNumber()

@@ -5,33 +5,15 @@ export interface ProductProps {
 }
 
 export class Product {
-  private readonly props: ProductProps;
+  id: number;
 
-  constructor(props: ProductProps) {
-    this.props = props;
-  }
+  name: string;
 
-  get id() {
-    return this.props.id;
-  }
+  price: number;
 
-  get name() {
-    return this.props.name;
-  }
-
-  get price() {
-    return this.props.price;
-  }
-
-  set id(value: number) {
-    this.props.id = value;
-  }
-
-  set name(value: string) {
-    this.props.name = value;
-  }
-
-  set price(value: number) {
-    this.props.price = value;
+  constructor({ id, name, price }: ProductProps) {
+    this.id = id;
+    this.name = name;
+    this.price = price;
   }
 }

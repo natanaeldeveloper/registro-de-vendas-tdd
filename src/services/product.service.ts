@@ -18,8 +18,8 @@ export class ProductService {
     await validateOrReject(dto);
 
     const product = new Product({
-      id: generateFakeId(),
       ...dto,
+      id: generateFakeId(),
     });
 
     this.products.push(product);
@@ -29,5 +29,9 @@ export class ProductService {
 
   async findById(id: number): Promise<Product> {
     return this.products.find((item) => item.id === id);
+  }
+
+  async findByIds(ids: number[]): Promise<Product[]> {
+    return await this.products.filter((item) => ids.includes(item.id));
   }
 }

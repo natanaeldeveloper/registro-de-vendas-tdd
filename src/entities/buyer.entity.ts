@@ -5,33 +5,15 @@ export interface BuyerProps {
 }
 
 export class Buyer {
-  private readonly props: BuyerProps;
+  id: number;
 
-  constructor(props: BuyerProps) {
-    this.props = props;
-  }
+  name: string;
 
-  get id() {
-    return this.props.id;
-  }
+  email: string;
 
-  get name() {
-    return this.props.name;
-  }
-
-  get email() {
-    return this.props.email;
-  }
-
-  set id(value: number) {
-    this.props.id = value;
-  }
-
-  set name(value: string) {
-    this.props.name = value;
-  }
-
-  set email(value: string) {
-    this.props.email = value;
+  constructor({ id, name, email }: BuyerProps) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
   }
 }

@@ -5,14 +5,14 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { MakePurchaseDto } from 'src/dtos/make-purchase.dto';
+import { CreatePurchaseDto } from 'src/dtos/create-purchase.dto';
 
 @ValidatorConstraint({ async: false })
 export class PurchaseCalculationDoesNotMatchConstraint
   implements ValidatorConstraintInterface
 {
   validate(value: number, args: ValidationArguments) {
-    const props = args.object as MakePurchaseDto;
+    const props = args.object as CreatePurchaseDto;
     return value === props.amountPaid + props.amountToPay;
   }
 
