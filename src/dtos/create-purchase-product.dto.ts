@@ -1,6 +1,7 @@
+import { Type } from 'class-transformer';
 import { IsNotEmpty, IsNumber, Min, ValidateNested } from 'class-validator';
 import { Product } from 'src/entities/product.entity';
-import { Type } from 'class-transformer';
+import { Purchase } from 'src/entities/purchase.entity';
 
 export class CreatePurchaseProductDto {
   @IsNumber()
@@ -12,4 +13,9 @@ export class CreatePurchaseProductDto {
   @ValidateNested()
   @Type(() => Product)
   product: Product;
+
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => Purchase)
+  purchase: Purchase;
 }

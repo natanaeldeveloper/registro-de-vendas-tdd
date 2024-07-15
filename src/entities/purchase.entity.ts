@@ -1,34 +1,33 @@
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Buyer } from './buyer.entity';
 import { PurchaseProduct } from './purchase-product.entity';
 
-export interface PurchaseProps {
-  id: number;
-  purchaseProducts: PurchaseProduct[];
-  buyer: Buyer;
-  totalAmount: number;
-  amountToPay: number;
-  amountPaid: number;
-}
-
+@Entity()
 export class Purchase {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  purchaseProducts: PurchaseProduct[];
-
-  buyer: Buyer;
-
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   totalAmount: number;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   amountToPay: number;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   amountPaid: number;
 
-  constructor(props: PurchaseProps) {
-    this.id = props.id;
-    this.purchaseProducts = props.purchaseProducts;
-    this.buyer = props.buyer;
-    this.totalAmount = props.totalAmount;
-    this.amountToPay = props.amountToPay;
-    this.amountPaid = props.amountPaid;
-  }
+  @OneToMany(
+    () => PurchaseProduct,
+    (purchaseProduct) => purchaseProduct.purchase,
+  )
+  purchaseProducts: PurchaseProduct[];
+
+  @ManyToOne(() => Buyer, (buyer) => buyer.purchases)
+  buyer: Buyer;
 }

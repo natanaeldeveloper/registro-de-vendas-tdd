@@ -1,54 +1,75 @@
 import { Injectable } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { validateOrReject } from 'class-validator';
 import { CreatePurchaseDto } from 'src/dtos/create-purchase.dto';
 import { Purchase } from 'src/entities/purchase.entity';
-import { generateFakeId } from 'src/utils/faker.util';
+import { PurchaseRepository } from 'src/repositories/purchase.repository';
+import { PurchaseProductService } from './purchase-product.service';
+import { validateOrReject } from 'class-validator';
 
 export type CreatePurchaseProps = Pick<
   CreatePurchaseDto,
-  'amountPaid' | 'purchaseProducts' | 'buyer'
+  'amountPaid' | 'buyer' | 'purchaseProducts'
 >;
 
 @Injectable()
 export class PurchaseService {
-  protected purchases: Purchase[];
-
-  constructor() {
-    this.purchases = [];
-  }
+  constructor(
+    protected readonly purchaseRepository: PurchaseRepository,
+    protected readonly purchaseProductService: PurchaseProductService,
+  ) {}
 
   async create(dtoData: CreatePurchaseProps): Promise<Purchase> {
     const dto = new CreatePurchaseDto();
 
+    dto.buyer = dtoData.buyer;
     dto.amountPaid = dtoData.amountPaid;
     dto.purchaseProducts = dtoData.purchaseProducts;
-    dto.buyer = dtoData.buyer;
 
-    dto.totalAmount = dto.purchaseProducts.reduce(
-      (total, current) => total + current.count * current.product.price,
-      0,
-    );
+    const { amountToPay, totalAmount } = this.caluclatePurchaseValues({
+      amountPaid: dto.amountPaid,
+      purchaseProducts: dto.purchaseProducts,
+    });
 
-    dto.amountToPay = dto.totalAmount - dto.amountPaid;
-
-    if (dto.amountToPay < 0) {
-      dto.amountToPay = 0;
-    }
+    dto.amountToPay = amountToPay;
+    dto.totalAmount = totalAmount;
 
     await validateOrReject(dto);
 
-    const purchase = new Purchase({
-      ...dto,
-      id: generateFakeId(),
-    });
+    const purchase = new Purchase();
 
-    this.purchases.push(purchase);
+    purchase.buyer = dto.buyer;
+    purchase.totalAmount = dto.totalAmount;
+    purchase.amountToPay = dto.amountToPay;
+    purchase.amountPaid = dto.amountPaid;
+    purchase.purchaseProducts = dto.purchaseProducts;
 
-    return purchase;
+    return this.save(purchase);
+  }
+
+  protected caluclatePurchaseValues(
+    props: Pick<Purchase, 'purchaseProducts' | 'amountPaid'>,
+  ): Pick<Purchase, 'totalAmount' | 'amountToPay'> {
+    const totalAmount = props.purchaseProducts.reduce(
+      (total, item) => item.count * item.product.price + total,
+      0,
+    );
+
+    let amountToPay = totalAmount - props.amountPaid;
+
+    if (amountToPay < 0) {
+      amountToPay = 0;
+    }
+
+    return {
+      totalAmount,
+      amountToPay,
+    };
+  }
+
+  async save(purchaseProduct: Purchase): Promise<Purchase> {
+    return this.purchaseRepository.save(purchaseProduct);
   }
 
   async findById(id: number): Promise<Purchase> {
-    return this.purchases.find((item) => item.id === id);
+    return this.purchaseRepository.findOneBy({ id });
   }
 }

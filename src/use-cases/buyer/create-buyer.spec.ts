@@ -1,15 +1,15 @@
-import { Buyer } from 'src/entities/buyer.entity';
+import { ValidationError } from 'class-validator';
+import { BuyerService } from 'src/services/buyer.service';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CreateBuyer } from './create-buyer.use-case';
-import { BuyerService } from 'src/services/buyer.service';
-import { ValidationError } from 'class-validator';
+import { BuyerRepository } from 'src/repositories/buyer.repository';
 
 describe('create-buyer.spec.ts', () => {
   let createBuyer: CreateBuyer;
   let buyerService: BuyerService;
 
   beforeEach(() => {
-    buyerService = new BuyerService();
+    buyerService = new BuyerService(new BuyerRepository());
     createBuyer = new CreateBuyer(buyerService);
   });
 

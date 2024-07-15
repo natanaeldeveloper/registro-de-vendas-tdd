@@ -1,19 +1,20 @@
-export interface ProductProps {
-  id: number;
-  name: string;
-  price: number;
-}
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { PurchaseProduct } from './purchase-product.entity';
 
+@Entity()
 export class Product {
+  @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'varchar' })
   name: string;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
-  constructor({ id, name, price }: ProductProps) {
-    this.id = id;
-    this.name = name;
-    this.price = price;
-  }
+  @OneToMany(
+    () => PurchaseProduct,
+    (purchaseProduct) => purchaseProduct.product,
+  )
+  purchaseProducts: PurchaseProduct[];
 }

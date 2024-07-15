@@ -1,18 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { PurchaseProduct } from 'src/entities/purchase-product.entity';
 import { Purchase } from 'src/entities/purchase.entity';
 import { BuyerService } from 'src/services/buyer.service';
 import { ProductService } from 'src/services/product.service';
-import { PurchaseProductService } from 'src/services/purchase-product.service';
-import {
-  CreatePurchaseProps,
-  PurchaseService,
-} from 'src/services/purchase.service';
+import { PurchaseService } from 'src/services/purchase.service';
 
 export type MakePurchaseProps = {
   amountPaid: number;
   buyerId: number;
-  purchaseProducts: {
-    productId: number;
+  products: {
+    id: number;
     count: number;
   }[];
 };
@@ -22,34 +19,33 @@ export class MakePurchase {
   constructor(
     protected readonly purchaseService: PurchaseService,
     protected readonly productService: ProductService,
-    protected readonly purchaseProductService: PurchaseProductService,
     protected readonly buyerService: BuyerService,
   ) {}
   async execute(dto: MakePurchaseProps): Promise<Purchase> {
-    const createPurchaseData: CreatePurchaseProps = {
-      amountPaid: dto.amountPaid,
-      purchaseProducts: [],
-      buyer: null,
-    };
+    const buyer = await this.buyerService.findById(dto.buyerId);
 
-    createPurchaseData.buyer = await this.buyerService.findById(dto.buyerId);
     const products = await this.productService.findByIds(
-      dto.purchaseProducts.map((item) => item.productId),
+      dto.products.map((item) => item.id),
     );
 
-    for (let purchaseProduct of dto.purchaseProducts) {
-      const product = products.find(
-        (item) => item.id === purchaseProduct.productId,
-      );
+    const purchaseProductsArray: PurchaseProduct[] = [];
 
-      const purchaseProductSaved = await this.purchaseProductService.create({
-        count: purchaseProduct.count,
-        product,
-      });
+    for (let productDto of dto.products) {
+      const product = products.find((item) => item.id === productDto.id);
 
-      createPurchaseData.purchaseProducts.push(purchaseProductSaved);
+      const purchaseProduct = new PurchaseProduct();
+      purchaseProduct.count = productDto.count;
+      purchaseProduct.product = product;
+
+      purchaseProductsArray.push(purchaseProduct);
     }
 
-    return await this.purchaseService.create(createPurchaseData);
+    const purchase = await this.purchaseService.create({
+      amountPaid: dto.amountPaid,
+      buyer: buyer,
+      purchaseProducts: purchaseProductsArray,
+    });
+
+    return purchase;
   }
 }

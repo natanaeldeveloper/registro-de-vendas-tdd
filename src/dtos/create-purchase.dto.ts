@@ -27,6 +27,7 @@ export class CreatePurchaseDto {
   @PurchaseCalculationDoesNotMatch()
   totalAmount: number;
 
+  @IsNotEmpty()
   @IsNumber()
   @Min(0, {
     message: 'O Valor pago não pode ser menor que zero.',

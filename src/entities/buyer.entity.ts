@@ -1,19 +1,17 @@
-export interface BuyerProps {
-  id: number;
-  name: string;
-  email: string;
-}
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Purchase } from './purchase.entity';
 
+@Entity()
 export class Buyer {
+  @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'varchar' })
   name: string;
 
+  @Column({ type: 'varchar' })
   email: string;
 
-  constructor({ id, name, email }: BuyerProps) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-  }
+  @OneToMany(() => Purchase, (purchase) => purchase.buyer)
+  purchases: Purchase[];
 }

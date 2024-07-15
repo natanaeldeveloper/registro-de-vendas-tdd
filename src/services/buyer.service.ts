@@ -1,33 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 import { CreateBuyerDto } from 'src/dtos/create-buyer.dto';
 import { Buyer } from 'src/entities/buyer.entity';
-import { generateFakeId } from 'src/utils/faker.util';
+import { BuyerRepository } from 'src/repositories/buyer.repository';
 
 @Injectable()
 export class BuyerService {
-  protected buyers: Buyer[];
-
-  constructor() {
-    this.buyers = [];
-  }
+  constructor(protected readonly buyerRepository: BuyerRepository) {}
 
   async create(dtoData: CreateBuyerDto): Promise<Buyer> {
-    const dto = plainToClass(CreateBuyerDto, dtoData);
+    const dto = new CreateBuyerDto();
+
+    dto.name = dtoData.name;
+    dto.email = dtoData.email;
+
     await validateOrReject(dto);
 
-    const buyer = new Buyer({
-      ...dto,
-      id: generateFakeId(),
-    });
+    const buyer = new Buyer();
 
-    this.buyers.push(buyer);
+    buyer.name = dto.name;
+    buyer.email = dto.email;
 
-    return buyer;
+    return this.save(buyer);
+  }
+
+  async save(buyer: Buyer): Promise<Buyer> {
+    return this.buyerRepository.save(buyer);
   }
 
   async findById(id: number): Promise<Buyer> {
-    return this.buyers.find((item) => item.id === id);
+    return this.buyerRepository.findOneBy({ id });
   }
 }
