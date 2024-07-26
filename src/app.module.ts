@@ -14,6 +14,10 @@ import { Product } from './entities/product.entity';
 import { Buyer } from './entities/buyer.entity';
 import { Purchase } from './entities/purchase.entity';
 import { PurchaseProduct } from './entities/purchase-product.entity';
+import { ProductRepository } from './repositories/product.repository';
+import { PurchaseProductRepository } from './repositories/purchase-product.repository';
+import { BuyerRepository } from './repositories/buyer.repository';
+import { PurchaseRepository } from './repositories/purchase.repository';
 
 @Module({
   imports: [
@@ -22,11 +26,11 @@ import { PurchaseProduct } from './entities/purchase-product.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT, 10),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
+      host: process.env.POSTGRES_HOST,
+      port: parseInt(process.env.POSTGRES_PORT, 10),
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
       entities: [Product, Buyer, PurchaseProduct, Purchase],
       synchronize: true,
     }),
@@ -34,14 +38,23 @@ import { PurchaseProduct } from './entities/purchase-product.entity';
   ],
   controllers: [AppController],
   providers: [
+    /* Repositories */
+    BuyerRepository,
+    PurchaseRepository,
+    PurchaseProductRepository,
+    ProductRepository,
+
+    /* services */
     AppService,
+    BuyerService,
+    ProductService,
+    PurchaseProductService,
+    PurchaseService,
+
+    /* use-cases */
     CreateBuyer,
     CreateProduct,
     MakePurchase,
-    ProductService,
-    PurchaseProductService,
-    BuyerService,
-    PurchaseService,
   ],
 })
 export class AppModule {}

@@ -5,7 +5,7 @@ import { BuyerService } from 'src/services/buyer.service';
 
 @Injectable()
 export class CreateBuyer {
-  constructor(protected readonly buyerService: BuyerService) {}
+  constructor(private readonly buyerService: BuyerService) {}
 
   async execute(dto: CreateBuyerDto): Promise<Buyer> {
     return await this.buyerService.create(dto);

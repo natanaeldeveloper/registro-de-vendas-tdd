@@ -9,7 +9,7 @@ import { Product } from './product.entity';
 import { Purchase } from './purchase.entity';
 
 @Entity()
-@Unique(['productId', 'purchaseId'])
+@Unique(['product', 'purchase'])
 export class PurchaseProduct {
   @PrimaryGeneratedColumn()
   id: number;

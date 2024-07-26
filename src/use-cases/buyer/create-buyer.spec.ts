@@ -1,16 +1,30 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import { ValidationError } from 'class-validator';
-import { BuyerService } from 'src/services/buyer.service';
-import { beforeEach, describe, expect, it } from 'vitest';
-import { CreateBuyer } from './create-buyer.use-case';
 import { BuyerRepository } from 'src/repositories/buyer.repository';
+import { BuyerService } from 'src/services/buyer.service';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { CreateBuyer } from './create-buyer.use-case';
 
 describe('create-buyer.spec.ts', () => {
   let createBuyer: CreateBuyer;
   let buyerService: BuyerService;
 
-  beforeEach(() => {
-    buyerService = new BuyerService(new BuyerRepository());
-    createBuyer = new CreateBuyer(buyerService);
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        CreateBuyer,
+        BuyerService,
+        {
+          provide: BuyerRepository,
+          useValue: {
+            save: vitest.fn(), // Simula o método save do repositório
+          },
+        },
+      ],
+    }).compile();
+
+    createBuyer = module.get<CreateBuyer>(CreateBuyer);
+    buyerService = module.get<BuyerService>(BuyerService);
   });
 
   it('Create a buyer', async () => {

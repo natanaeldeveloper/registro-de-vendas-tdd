@@ -6,7 +6,7 @@ import { BuyerRepository } from 'src/repositories/buyer.repository';
 
 @Injectable()
 export class BuyerService {
-  constructor(protected readonly buyerRepository: BuyerRepository) {}
+  constructor(private readonly buyerRepository: BuyerRepository) {}
 
   async create(dtoData: CreateBuyerDto): Promise<Buyer> {
     const dto = new CreateBuyerDto();
@@ -21,7 +21,7 @@ export class BuyerService {
     buyer.name = dto.name;
     buyer.email = dto.email;
 
-    return this.save(buyer);
+    return this.buyerRepository.save(buyer);
   }
 
   async save(buyer: Buyer): Promise<Buyer> {

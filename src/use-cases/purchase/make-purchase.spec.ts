@@ -3,11 +3,15 @@ import { BuyerService } from 'src/services/buyer.service';
 import { ProductService } from 'src/services/product.service';
 import { PurchaseProductService } from 'src/services/purchase-product.service';
 import { PurchaseService } from 'src/services/purchase.service';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, Mock } from 'vitest';
 import { CreateBuyer } from '../buyer/create-buyer.use-case';
 import { CreateProduct } from '../product/create-product.use-case';
 import { MakePurchase } from './make-purchase.use-case';
 import { ValidationError } from 'class-validator';
+import { BuyerRepository } from 'src/repositories/buyer.repository';
+import { ProductRepository } from 'src/repositories/product.repository';
+import { PurchaseRepository } from 'src/repositories/purchase.repository';
+import { PurchaseProductRepository } from 'src/repositories/purchase-product.repository';
 
 describe('make-purchase.spec.ts', () => {
   //declaração de services
@@ -21,18 +25,27 @@ describe('make-purchase.spec.ts', () => {
   let createProduct: CreateProduct;
   let makePurchase: MakePurchase;
 
+  let buyerRepository: BuyerRepository;
+  let productRepository: ProductRepository;
+  let purchaseRepository: PurchaseRepository;
+  let purchaseProductRepository: PurchaseProductRepository;
+
   beforeEach(() => {
-    buyerService = new BuyerService();
-    productService = new ProductService();
-    purchaseService = new PurchaseService();
-    purchaseProductService = new PurchaseProductService();
+    buyerService = new BuyerService(buyerRepository);
+    productService = new ProductService(productRepository);
+    purchaseProductService = new PurchaseProductService(
+      purchaseProductRepository,
+    );
+    purchaseService = new PurchaseService(
+      purchaseRepository,
+      purchaseProductService,
+    );
 
     createBuyer = new CreateBuyer(buyerService);
     createProduct = new CreateProduct(productService);
     makePurchase = new MakePurchase(
       purchaseService,
       productService,
-      purchaseProductService,
       buyerService,
     );
   });
@@ -51,10 +64,10 @@ describe('make-purchase.spec.ts', () => {
     const purchase = await makePurchase.execute({
       amountPaid: 2,
       buyerId: mockBuyer.id,
-      purchaseProducts: [
+      products: [
         {
+          id: mockProduct.id,
           count: 1,
-          productId: mockProduct.id,
         },
       ],
     });
@@ -81,10 +94,10 @@ describe('make-purchase.spec.ts', () => {
       await makePurchase.execute({
         amountPaid: 999, //disparidade
         buyerId: mockBuyer.id,
-        purchaseProducts: [
+        products: [
           {
+            id: mockProduct.id,
             count: 1,
-            productId: mockProduct.id,
           },
         ],
       });
