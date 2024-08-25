@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { validateOrReject } from 'class-validator';
 import { CreatePurchaseDto } from 'src/dtos/create-purchase.dto';
 import { Purchase } from 'src/entities/purchase.entity';
-import { PurchaseRepository } from 'src/repositories/purchase.repository';
+import { Repository } from 'typeorm';
 import { PurchaseProductService } from './purchase-product.service';
-import { validateOrReject } from 'class-validator';
 
 export type CreatePurchaseProps = Pick<
   CreatePurchaseDto,
@@ -13,7 +14,8 @@ export type CreatePurchaseProps = Pick<
 @Injectable()
 export class PurchaseService {
   constructor(
-    protected readonly purchaseRepository: PurchaseRepository,
+    @InjectRepository(Purchase)
+    protected readonly purchaseRepository: Repository<Purchase>,
     protected readonly purchaseProductService: PurchaseProductService,
   ) {}
 

@@ -1,10 +1,10 @@
+import { CreateProductDto } from '@/dtos/create-product.dto';
+import { Product } from '@/entities/product.entity';
+import { ProductService } from '@/services/product.service';
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from 'src/dtos/create-product.dto';
-import { ProductService } from 'src/services/product.service';
-import { Product } from '../../entities/product.entity';
 
 @Injectable()
-export class CreateProduct {
+export class CreateProductUseCase {
   constructor(protected readonly productService: ProductService) {}
 
   async execute(dto: CreateProductDto): Promise<Product> {

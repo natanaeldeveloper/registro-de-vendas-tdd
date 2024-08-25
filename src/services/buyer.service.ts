@@ -1,21 +1,17 @@
+import { CreateBuyerDto } from '@/dtos/create-buyer.dto';
+import { Buyer } from '@/entities/buyer.entity';
 import { Injectable } from '@nestjs/common';
-import { validateOrReject } from 'class-validator';
-import { CreateBuyerDto } from 'src/dtos/create-buyer.dto';
-import { Buyer } from 'src/entities/buyer.entity';
-import { BuyerRepository } from 'src/repositories/buyer.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BuyerService {
-  constructor(private readonly buyerRepository: BuyerRepository) {}
+  constructor(
+    @InjectRepository(Buyer)
+    private readonly buyerRepository: Repository<Buyer>,
+  ) {}
 
-  async create(dtoData: CreateBuyerDto): Promise<Buyer> {
-    const dto = new CreateBuyerDto();
-
-    dto.name = dtoData.name;
-    dto.email = dtoData.email;
-
-    await validateOrReject(dto);
-
+  async create(dto: CreateBuyerDto): Promise<Buyer> {
     const buyer = new Buyer();
 
     buyer.name = dto.name;

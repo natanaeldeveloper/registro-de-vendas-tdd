@@ -1,23 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
-import { validateOrReject } from 'class-validator';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from 'src/dtos/create-product.dto';
 import { Product } from 'src/entities/product.entity';
-import { ProductRepository } from 'src/repositories/product.repository';
-import { In } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
-  constructor(protected readonly productRepository: ProductRepository) {}
+  constructor(
+    @InjectRepository(Product) private productRepository: Repository<Product>,
+  ) {}
 
-  async create(dtoData: CreateProductDto): Promise<Product> {
-    const dto = new CreateProductDto();
-
-    dto.name = dtoData.name;
-    dto.price = dtoData.price;
-
-    await validateOrReject(dto);
-
+  async create(dto: CreateProductDto): Promise<Product> {
     const product = new Product();
 
     product.name = dto.name;

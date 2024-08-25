@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { CreateBuyerDto } from 'src/dtos/create-buyer.dto';
-import { Buyer } from 'src/entities/buyer.entity';
-import { BuyerService } from 'src/services/buyer.service';
+import { CreateBuyerDto } from '@/dtos/create-buyer.dto';
+import { Buyer } from '@/entities/buyer.entity';
+import { BuyerService } from '@/services/buyer.service';
+import { Body, Injectable } from '@nestjs/common';
 
 @Injectable()
-export class CreateBuyer {
-  constructor(private readonly buyerService: BuyerService) {}
+export class CreateBuyerUseCase {
+  constructor(protected readonly buyerService: BuyerService) {}
 
-  async execute(dto: CreateBuyerDto): Promise<Buyer> {
+  async execute(@Body() dto: CreateBuyerDto): Promise<Buyer> {
     return await this.buyerService.create(dto);
   }
 }

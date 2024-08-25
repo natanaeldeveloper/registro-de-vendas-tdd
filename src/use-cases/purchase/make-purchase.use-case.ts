@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PurchaseProduct } from 'src/entities/purchase-product.entity';
-import { Purchase } from 'src/entities/purchase.entity';
-import { BuyerService } from 'src/services/buyer.service';
-import { ProductService } from 'src/services/product.service';
-import { PurchaseService } from 'src/services/purchase.service';
+import { PurchaseProduct } from '@/entities/purchase-product.entity';
+import { Purchase } from '@/entities/purchase.entity';
+import { BuyerService } from '@/services/buyer.service';
+import { ProductService } from '@/services/product.service';
+import { PurchaseService } from '@/services/purchase.service';
+import { PurchaseProductService } from '@/services/purchase-product.service';
 
 export type MakePurchaseProps = {
   amountPaid: number;
@@ -15,11 +16,12 @@ export type MakePurchaseProps = {
 };
 
 @Injectable()
-export class MakePurchase {
+export class MakePurchaseUseCase {
   constructor(
     protected readonly purchaseService: PurchaseService,
     protected readonly productService: ProductService,
     protected readonly buyerService: BuyerService,
+    protected readonly purchaseProductService: PurchaseProductService,
   ) {}
   async execute(dto: MakePurchaseProps): Promise<Purchase> {
     const buyer = await this.buyerService.findById(dto.buyerId);
@@ -39,6 +41,8 @@ export class MakePurchase {
 
       purchaseProductsArray.push(purchaseProduct);
     }
+
+    await this.purchaseProductService.saveAll(purchaseProductsArray);
 
     const purchase = await this.purchaseService.create({
       amountPaid: dto.amountPaid,
