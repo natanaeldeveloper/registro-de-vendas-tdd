@@ -1,7 +1,5 @@
 import {
-  registerDecorator,
   ValidationArguments,
-  ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
@@ -19,18 +17,4 @@ export class PurchaseCalculationDoesNotMatchConstraint
   defaultMessage() {
     return 'Há inconsistências entre o "valor a pagar", "valor pago" e "total da compra"';
   }
-}
-
-export function PurchaseCalculationDoesNotMatch(
-  validationOptions?: ValidationOptions,
-) {
-  return (object: object, propertyName: string) => {
-    registerDecorator({
-      target: object.constructor,
-      propertyName: propertyName,
-      options: validationOptions,
-      constraints: [],
-      validator: PurchaseCalculationDoesNotMatchConstraint,
-    });
-  };
 }

@@ -16,8 +16,6 @@ import { PurchaseService } from './services/purchase.service';
 import { CreateBuyerUseCase } from './use-cases/create-buyer.use-case';
 import { CreateProductUseCase } from './use-cases/create-product.use-case';
 import { MakePurchaseUseCase } from './use-cases/make-purchase.use-case';
-import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -51,11 +49,6 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
     CreateBuyerUseCase,
     CreateProductUseCase,
     MakePurchaseUseCase,
-
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
   ],
 })
 export class AppModule {}

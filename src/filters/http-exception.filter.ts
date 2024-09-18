@@ -1,5 +1,6 @@
 import {
   ArgumentsHost,
+  BadRequestException,
   Catch,
   ExceptionFilter,
   HttpException,
@@ -14,12 +15,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    // Formata a resposta de erro
-    response.status(status).json({
+    const responseBody = {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message: exception.message || 'Internal server error',
-    });
+      message: (exception.message || 'Internal server error') as any,
+    };
+
+    if (exception instanceof BadRequestException) {
+      Object.assign(responseBody, exception.getResponse());
+    }
+
+    // Formata a resposta de erro
+    response.status(status).json(responseBody);
   }
 }

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from 'src/dtos/create-product.dto';
 import { Product } from 'src/entities/product.entity';
@@ -14,10 +14,7 @@ export class ProductService {
     const existingProduct = await this.findByName(dto.name);
 
     if (existingProduct) {
-      throw new HttpException(
-        'Produto com esse nome já cadastrado.',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException('Produto com esse nome já cadastrado.');
     }
 
     const product = new Product();

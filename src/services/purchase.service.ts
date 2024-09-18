@@ -1,12 +1,11 @@
+import { PurchaseProduct } from '@/entities/purchase-product.entity';
+import { validateDto } from '@/utils/validate-dto.util';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { validateOrReject } from 'class-validator';
 import { CreatePurchaseDto } from 'src/dtos/create-purchase.dto';
 import { Purchase } from 'src/entities/purchase.entity';
 import { Repository } from 'typeorm';
 import { PurchaseProductService } from './purchase-product.service';
-import { CreatePurchaseProductDto } from '@/dtos/create-purchase-product.dto';
-import { PurchaseProduct } from '@/entities/purchase-product.entity';
 
 @Injectable()
 export class PurchaseService {
@@ -23,11 +22,11 @@ export class PurchaseService {
     createPurchaseDto.amountToPay = amountToPay;
     createPurchaseDto.totalAmount = totalAmount;
 
-    await validateOrReject(createPurchaseDto);
+    await validateDto(createPurchaseDto);
 
     const purchaseProductArray: PurchaseProduct[] = [];
 
-    for (let purchaseProductDto of createPurchaseDto.products) {
+    for (const purchaseProductDto of createPurchaseDto.products) {
       const purchaseProduct = new PurchaseProduct();
       purchaseProduct.count = purchaseProductDto.count;
       purchaseProduct.product = purchaseProductDto.product;

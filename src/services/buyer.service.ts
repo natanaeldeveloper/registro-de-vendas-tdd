@@ -1,6 +1,6 @@
 import { CreateBuyerDto } from '@/dtos/create-buyer.dto';
 import { Buyer } from '@/entities/buyer.entity';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -15,9 +15,8 @@ export class BuyerService {
     const existingBuyer = await this.findByEmail(dto.email);
 
     if (existingBuyer) {
-      throw new HttpException(
+      throw new BadRequestException(
         'Já existe um usuário com esse email cadastrado.',
-        HttpStatus.BAD_REQUEST,
       );
     }
 

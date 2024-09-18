@@ -1,6 +1,8 @@
+import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsNumber, Min } from 'class-validator';
 
 export class CreateProductDto {
+  @Transform(({ value }) => value?.trim())
   @IsNotEmpty({ message: 'O campo nome deve ser informado.' })
   name: string;
 
