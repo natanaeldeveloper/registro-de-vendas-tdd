@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from 'src/dtos/create-product.dto';
 import { Product } from 'src/entities/product.entity';
@@ -7,10 +7,19 @@ import { In, Repository } from 'typeorm';
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectRepository(Product) private productRepository: Repository<Product>,
+    @InjectRepository(Product) protected productRepository: Repository<Product>,
   ) {}
 
-  async create(dto: CreateProductDto): Promise<Product> {
+  async create(dto: CreateProductDto) {
+    const existingProduct = await this.findByName(dto.name);
+
+    if (existingProduct) {
+      throw new HttpException(
+        'Produto com esse nome já cadastrado.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const product = new Product();
 
     product.name = dto.name;
@@ -19,15 +28,19 @@ export class ProductService {
     return this.save(product);
   }
 
-  async save(product: Product): Promise<Product> {
+  save(product: Product) {
     return this.productRepository.save(product);
   }
 
-  async findById(id: number): Promise<Product> {
+  findById(id: number) {
     return this.productRepository.findOneBy({ id });
   }
 
-  async findByIds(ids: number[]): Promise<Product[]> {
+  findByIds(ids: number[]) {
     return this.productRepository.find({ where: { id: In(ids) } });
+  }
+
+  findByName(name: string) {
+    return this.productRepository.findOneBy({ name });
   }
 }

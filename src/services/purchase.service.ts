@@ -5,11 +5,8 @@ import { CreatePurchaseDto } from 'src/dtos/create-purchase.dto';
 import { Purchase } from 'src/entities/purchase.entity';
 import { Repository } from 'typeorm';
 import { PurchaseProductService } from './purchase-product.service';
-
-export type CreatePurchaseProps = Pick<
-  CreatePurchaseDto,
-  'amountPaid' | 'buyer' | 'purchaseProducts'
->;
+import { CreatePurchaseProductDto } from '@/dtos/create-purchase-product.dto';
+import { PurchaseProduct } from '@/entities/purchase-product.entity';
 
 @Injectable()
 export class PurchaseService {
@@ -19,43 +16,45 @@ export class PurchaseService {
     protected readonly purchaseProductService: PurchaseProductService,
   ) {}
 
-  async create(dtoData: CreatePurchaseProps): Promise<Purchase> {
-    const dto = new CreatePurchaseDto();
+  async create(createPurchaseDto: CreatePurchaseDto) {
+    const { amountToPay, totalAmount } =
+      this.caluclatePurchaseValues(createPurchaseDto);
 
-    dto.buyer = dtoData.buyer;
-    dto.amountPaid = dtoData.amountPaid;
-    dto.purchaseProducts = dtoData.purchaseProducts;
+    createPurchaseDto.amountToPay = amountToPay;
+    createPurchaseDto.totalAmount = totalAmount;
 
-    const { amountToPay, totalAmount } = this.caluclatePurchaseValues({
-      amountPaid: dto.amountPaid,
-      purchaseProducts: dto.purchaseProducts,
-    });
+    await validateOrReject(createPurchaseDto);
 
-    dto.amountToPay = amountToPay;
-    dto.totalAmount = totalAmount;
+    const purchaseProductArray: PurchaseProduct[] = [];
 
-    await validateOrReject(dto);
+    for (let purchaseProductDto of createPurchaseDto.products) {
+      const purchaseProduct = new PurchaseProduct();
+      purchaseProduct.count = purchaseProductDto.count;
+      purchaseProduct.product = purchaseProductDto.product;
+
+      purchaseProductArray.push(purchaseProduct);
+    }
 
     const purchase = new Purchase();
 
-    purchase.buyer = dto.buyer;
-    purchase.totalAmount = dto.totalAmount;
-    purchase.amountToPay = dto.amountToPay;
-    purchase.amountPaid = dto.amountPaid;
-    purchase.purchaseProducts = dto.purchaseProducts;
+    purchase.buyer = createPurchaseDto.buyer;
+    purchase.totalAmount = createPurchaseDto.totalAmount;
+    purchase.amountToPay = createPurchaseDto.amountToPay;
+    purchase.amountPaid = createPurchaseDto.amountPaid;
+    purchase.purchaseProducts = purchaseProductArray;
 
     return this.save(purchase);
   }
 
   protected caluclatePurchaseValues(
-    props: Pick<Purchase, 'purchaseProducts' | 'amountPaid'>,
-  ): Pick<Purchase, 'totalAmount' | 'amountToPay'> {
-    const totalAmount = props.purchaseProducts.reduce(
+    createPurchaseDto: CreatePurchaseDto,
+  ): Pick<CreatePurchaseDto, 'totalAmount' | 'amountToPay'> {
+    const totalAmount = createPurchaseDto.products.reduce(
       (total, item) => item.count * item.product.price + total,
       0,
     );
 
-    let amountToPay = totalAmount - props.amountPaid;
+    let amountToPay = totalAmount - createPurchaseDto.amountPaid;
 
     if (amountToPay < 0) {
       amountToPay = 0;
@@ -67,11 +66,11 @@ export class PurchaseService {
     };
   }
 
-  async save(purchaseProduct: Purchase): Promise<Purchase> {
+  async save(purchaseProduct: Purchase) {
     return this.purchaseRepository.save(purchaseProduct);
   }
 
-  async findById(id: number): Promise<Purchase> {
+  async findById(id: number) {
     return this.purchaseRepository.findOneBy({ id });
   }
 }

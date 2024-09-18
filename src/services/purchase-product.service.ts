@@ -11,31 +11,28 @@ export class PurchaseProductService {
     protected readonly purchaseProductRepository: Repository<PurchaseProduct>,
   ) {}
 
-  async create(dto: CreatePurchaseProductDto): Promise<PurchaseProduct> {
+  create(dto: CreatePurchaseProductDto) {
     const purchaseProduct = new PurchaseProduct();
 
     purchaseProduct.count = dto.count;
     purchaseProduct.product = dto.product;
-    purchaseProduct.purchase = dto.purchase;
 
     return this.save(purchaseProduct);
   }
 
-  async save(purchaseProduct: PurchaseProduct): Promise<PurchaseProduct> {
+  save(purchaseProduct: PurchaseProduct) {
     return this.purchaseProductRepository.save(purchaseProduct);
   }
 
-  async saveAll(
-    purchaseProducts: PurchaseProduct[],
-  ): Promise<PurchaseProduct[]> {
+  saveAll(purchaseProducts: PurchaseProduct[]) {
     return this.purchaseProductRepository.save(purchaseProducts);
   }
 
-  async findById(id: number): Promise<PurchaseProduct> {
+  findById(id: number) {
     return this.purchaseProductRepository.findOneBy({ id });
   }
 
-  async findAllByPurchaseId(purchaseId: number): Promise<PurchaseProduct[]> {
+  findAllByPurchaseId(purchaseId: number) {
     return this.purchaseProductRepository.find({
       where: { purchase: { id: purchaseId } },
       relations: ['product'],

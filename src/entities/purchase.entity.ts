@@ -25,6 +25,7 @@ export class Purchase {
   @OneToMany(
     () => PurchaseProduct,
     (purchaseProduct) => purchaseProduct.purchase,
+    { cascade: true },
   )
   purchaseProducts: PurchaseProduct[];
 

@@ -10,12 +10,13 @@ import {
 import { Buyer } from 'src/entities/buyer.entity';
 import { PurchaseProduct } from 'src/entities/purchase-product.entity';
 import { PurchaseCalculationDoesNotMatch } from 'src/validates/purchase-calculation-does-not-match.constraint';
+import { CreatePurchaseProductDto } from './create-purchase-product.dto';
 
 export class CreatePurchaseDto {
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => PurchaseProduct)
-  purchaseProducts: PurchaseProduct[];
+  @Type(() => CreatePurchaseProductDto)
+  products: CreatePurchaseProductDto[];
 
   @IsNotEmpty()
   @ValidateNested()
