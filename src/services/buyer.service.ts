@@ -22,7 +22,8 @@ export class BuyerService {
 
     const buyer = new Buyer();
 
-    buyer.name = dto.name;
+    buyer.firstName = dto.firstName;
+    buyer.lastName = dto.lastName;
     buyer.email = dto.email;
 
     return this.save(buyer);

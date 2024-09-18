@@ -7,7 +7,10 @@ export class Buyer {
   id: number;
 
   @Column({ type: 'varchar' })
-  name: string;
+  firstName: string;
+
+  @Column({ type: 'varchar' })
+  lastName: string;
 
   @Column({ type: 'varchar' })
   email: string;
