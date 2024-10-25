@@ -41,9 +41,7 @@ export class CashierService {
 
     dto.products_stock.forEach((item) => {
       const productStock = new ProductStock();
-
       productStock.count = item.count;
-
       const findedProduct = products.find(
         (product) => product.id == item.product_id,
       );

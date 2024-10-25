@@ -1,5 +1,5 @@
 import { PaymentMethods } from '@/shared/enums';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
@@ -15,6 +15,7 @@ import {
 import { CreateProductStockDto } from './create-product-stock.dto';
 
 export class CreateCashierDto {
+  @Transform(({ value }) => value?.trim())
   @MinLength(3)
   name: string;
 
@@ -35,9 +36,11 @@ export class CreateCashierDto {
   @IsEnum(PaymentMethods, { each: true })
   payment_methods: PaymentMethods[];
 
+  @Transform(({ value }) => value?.trim())
   @MinLength(3)
   pix_key: string;
 
+  @Transform(({ value }) => value?.trim())
   @MinLength(3)
   pix_recipient: string;
 

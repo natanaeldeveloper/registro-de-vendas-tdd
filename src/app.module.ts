@@ -5,23 +5,21 @@ import { AppService } from './app.service';
 import { BuyerController } from './controllers/buyer.controller';
 import { CashierController } from './controllers/cashier.controller';
 import { ProductController } from './controllers/product.controller';
-import { PurchaseController } from './controllers/purchase.controller';
+import { SaleController } from './controllers/sale.controller';
 import { StandController } from './controllers/stand.controller';
 import { Buyer } from './entities/buyer.entity';
 import { Cashier } from './entities/cashier.entity';
 import { ProductStock } from './entities/product-stock.entity';
 import { Product } from './entities/product.entity';
-import { PurchaseProduct } from './entities/purchase-product.entity';
-import { Purchase } from './entities/purchase.entity';
+import { SaleProduct } from './entities/sale-product.entity';
+import { Sale } from './entities/sale.entity';
 import { Stand } from './entities/stand.entity';
 import { BuyerService } from './services/buyer.service';
 import { CashierService } from './services/cashier.service';
 import { ProductService } from './services/product.service';
-import { PurchaseProductService } from './services/purchase-product.service';
-import { PurchaseService } from './services/purchase.service';
+import { SaleService } from './services/sale.service';
 import { StandService } from './services/stand.service';
-import { CreateBuyerUseCase } from './use-cases/create-buyer.use-case';
-import { MakePurchaseUseCase } from './use-cases/make-purchase.use-case';
+import { SalePayment } from './entities/sale-payment.entity';
 
 @Module({
   imports: [
@@ -38,28 +36,30 @@ import { MakePurchaseUseCase } from './use-cases/make-purchase.use-case';
       entities: [
         Product,
         Buyer,
-        PurchaseProduct,
-        Purchase,
+        SaleProduct,
+        Sale,
         Stand,
         Cashier,
         ProductStock,
+        SalePayment,
       ],
       synchronize: true,
     }),
     TypeOrmModule.forFeature([
       Product,
       Buyer,
-      PurchaseProduct,
-      Purchase,
+      SaleProduct,
+      Sale,
       Stand,
       Cashier,
       ProductStock,
+      SalePayment,
     ]),
   ],
   controllers: [
     ProductController,
     BuyerController,
-    PurchaseController,
+    SaleController,
     StandController,
     CashierController,
   ],
@@ -70,14 +70,9 @@ import { MakePurchaseUseCase } from './use-cases/make-purchase.use-case';
     AppService,
     BuyerService,
     ProductService,
-    PurchaseProductService,
-    PurchaseService,
+    SaleService,
     StandService,
     CashierService,
-
-    /* use-cases */
-    CreateBuyerUseCase,
-    MakePurchaseUseCase,
   ],
 })
 export class AppModule {}

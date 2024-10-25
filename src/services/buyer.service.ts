@@ -1,4 +1,4 @@
-import { CreateBuyerDto } from '@/dtos/create-buyer.dto';
+import { CreateBuyerDto } from '@/dtos/create-sale/create-sale-buyer.dto';
 import { Buyer } from '@/entities/buyer.entity';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,9 +22,9 @@ export class BuyerService {
 
     const buyer = new Buyer();
 
-    buyer.firstName = dto.firstName;
-    buyer.lastName = dto.lastName;
+    buyer.name = dto.name;
     buyer.email = dto.email;
+    buyer.phone = dto.phone;
 
     return this.save(buyer);
   }

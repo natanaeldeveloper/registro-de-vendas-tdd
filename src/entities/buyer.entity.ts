@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Purchase } from './purchase.entity';
+import { Sale } from './sale.entity';
 
 @Entity()
 export class Buyer {
@@ -7,14 +7,14 @@ export class Buyer {
   id: number;
 
   @Column({ type: 'varchar' })
-  firstName: string;
+  name: string;
 
-  @Column({ type: 'varchar' })
-  lastName: string;
-
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   email: string;
 
-  @OneToMany(() => Purchase, (purchase) => purchase.buyer)
-  purchases: Purchase[];
+  @Column({ type: 'varchar', nullable: true })
+  phone: string;
+
+  @OneToMany(() => Sale, (sale) => sale.buyer, { nullable: false })
+  sale: Sale[];
 }

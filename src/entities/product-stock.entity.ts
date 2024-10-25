@@ -7,7 +7,7 @@ export class ProductStock {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Product, (product) => product.productsStock, {
+  @ManyToOne(() => Product, (product) => product.products_stock, {
     nullable: false,
   })
   product: Product;
@@ -15,6 +15,9 @@ export class ProductStock {
   @Column({ type: 'int' })
   count: number;
 
-  @ManyToOne(() => Cashier, (cashier) => cashier.products_stock)
+  @ManyToOne(() => Cashier, (cashier) => cashier.products_stock, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
   cashier: Cashier;
 }

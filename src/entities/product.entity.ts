@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { PurchaseProduct } from './purchase-product.entity';
 import { ProductStock } from './product-stock.entity';
+import { SaleProduct } from './sale-product.entity';
 
 @Entity()
 export class Product {
@@ -13,12 +13,9 @@ export class Product {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
-  @OneToMany(
-    () => PurchaseProduct,
-    (purchaseProduct) => purchaseProduct.product,
-  )
-  purchaseProducts: PurchaseProduct[];
+  @OneToMany(() => SaleProduct, (saleProduct) => saleProduct.product)
+  sale_products: SaleProduct[];
 
   @OneToMany(() => ProductStock, (productStock) => productStock.product)
-  productsStock: ProductStock[];
+  products_stock: ProductStock[];
 }
