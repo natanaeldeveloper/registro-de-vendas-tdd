@@ -10,7 +10,12 @@ export class ProductController {
   @Post()
   async create(@Body() dto: CreateProductDto, @Res() res: Response) {
     const data = await this.productService.create(dto);
-    return res.status(HttpStatus.CREATED).json({ data });
+    return res.status(HttpStatus.CREATED).json({
+      data,
+      statusCode: HttpStatus.CREATED,
+      success: 'Created',
+      message: 'Produto registrado com sucesso.',
+    });
   }
 
   @Get()

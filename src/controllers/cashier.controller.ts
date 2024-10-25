@@ -10,13 +10,17 @@ export class CashierController {
   @Post()
   async create(@Body() dto: CreateCashierDto, @Res() res: Response) {
     const data = await this.cashierService.create(dto);
-    return res.status(HttpStatus.CREATED).json({ data });
+    return res.status(HttpStatus.CREATED).json({
+      data,
+      statusCode: HttpStatus.CREATED,
+      success: 'Created',
+      message: 'Caixa registrado com sucesso.',
+    });
   }
 
   @Get()
   async getAll(@Res() res: Response) {
-    const data = this.cashierService.getAll();
-
+    const data = await this.cashierService.getAll();
     return res.json({ data });
   }
 }

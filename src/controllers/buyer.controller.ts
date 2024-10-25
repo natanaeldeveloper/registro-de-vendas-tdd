@@ -9,9 +9,9 @@ export class BuyerController {
 
   @Post()
   async create(@Res() res: Response, @Body() createBuyerDto: CreateBuyerDto) {
-    const buyer = await this.createBuyerUseCase.execute(createBuyerDto);
+    const data = await this.createBuyerUseCase.execute(createBuyerDto);
     return res.status(HttpStatus.CREATED).json({
-      data: buyer,
+      data,
       statusCode: HttpStatus.CREATED,
       success: 'Created',
       message: 'Cliente registrado com sucesso.',

@@ -7,21 +7,20 @@ import { Response } from 'express';
 export class StandController {
   constructor(protected readonly standService: StandService) {}
 
-  @Get()
-  async getAll(@Res() res: Response) {
-    const data = await this.standService.findAll();
-
-    return res.json({
-      data,
-    });
-  }
-
   @Post()
   async create(@Body() dto: CreateStandDto, @Res() res: Response) {
     const data = await this.standService.create(dto);
-
     return res.status(HttpStatus.CREATED).json({
       data,
+      statusCode: HttpStatus.CREATED,
+      success: 'Created',
+      message: 'Banca de vendas registrada com sucesso.',
     });
+  }
+
+  @Get()
+  async getAll(@Res() res: Response) {
+    const data = await this.standService.findAll();
+    return res.json({ data });
   }
 }
