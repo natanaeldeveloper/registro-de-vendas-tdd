@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import * as dotenv from 'dotenv';
 import 'reflect-metadata';
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
 
 async function bootstrap() {
   dotenv.config();
@@ -13,9 +13,9 @@ async function bootstrap() {
 
   // Configurar CORS
   app.enableCors({
-    origin: 'http://localhost:5173', // Permitir apenas esta origem
+    origin: '*', // Permitir apenas esta origem
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
+    credentials: false,
   });
 
   await app.listen(3000);

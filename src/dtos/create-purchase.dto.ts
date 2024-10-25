@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Buyer } from 'src/entities/buyer.entity';
-import { PurchaseCalculationDoesNotMatchConstraint } from 'src/validates/purchase-calculation-does-not-match.constraint';
+import { PurchaseCalculationDoesNotMatchConstraint } from '@/shared/validates/purchase-calculation-does-not-match.constraint';
 import { CreatePurchaseProductDto } from './create-purchase-product.dto';
 
 export class CreatePurchaseDto {

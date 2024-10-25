@@ -22,11 +22,11 @@ export class ProductService {
     product.name = dto.name;
     product.price = dto.price;
 
-    return this.save(product);
+    return this.productRepository.save(product);
   }
 
-  save(product: Product) {
-    return this.productRepository.save(product);
+  getAll() {
+    return this.productRepository.find();
   }
 
   findById(id: number) {

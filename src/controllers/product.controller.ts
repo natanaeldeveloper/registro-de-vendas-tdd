@@ -1,13 +1,21 @@
 import { CreateProductDto } from '@/dtos/create-product.dto';
-import { CreateProductUseCase } from '@/use-cases/create-product.use-case';
-import { Body, Controller, Post } from '@nestjs/common';
+import { ProductService } from '@/services/product.service';
+import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller('products')
 export class ProductController {
-  constructor(protected readonly createProductUseCase: CreateProductUseCase) {}
+  constructor(protected readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.createProductUseCase.execute(createProductDto);
+  async create(@Body() dto: CreateProductDto, @Res() res: Response) {
+    const data = await this.productService.create(dto);
+    return res.status(HttpStatus.CREATED).json({ data });
+  }
+
+  @Get()
+  async getAll(@Res() res: Response) {
+    const data = await this.productService.getAll();
+    return res.json({ data });
   }
 }
