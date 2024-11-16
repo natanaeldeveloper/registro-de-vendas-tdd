@@ -64,7 +64,7 @@ export class SaleService {
     return this.saleRepository.save(sale);
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.saleRepository.findOneBy({ id });
   }
 }

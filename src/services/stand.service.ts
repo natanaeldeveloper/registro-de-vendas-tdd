@@ -1,8 +1,8 @@
 import { CreateStandDto } from '@/dtos/create-stand.dto';
 import { Stand } from '@/entities/stand.entity';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class StandService {
@@ -11,10 +11,22 @@ export class StandService {
     protected readonly standRepository: Repository<Stand>,
   ) {}
 
-  create(dto: CreateStandDto) {
+  async create(dto: CreateStandDto) {
     const stand = new Stand();
     stand.name = dto.name;
     stand.color = dto.color;
+
+    const hasEqualsName = await this.standRepository.findOne({
+      where: {
+        name: ILike(`${dto.name}`),
+      },
+    });
+
+    if (hasEqualsName) {
+      throw new BadRequestException(
+        'Já existe uma banca com o nome informado.',
+      );
+    }
 
     return this.standRepository.save(stand);
   }
@@ -23,7 +35,7 @@ export class StandService {
     return this.standRepository.find();
   }
 
-  findById(id: number) {
+  findById(id: string) {
     return this.standRepository.findOneBy({ id });
   }
 }

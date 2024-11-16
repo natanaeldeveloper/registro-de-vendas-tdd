@@ -29,8 +29,9 @@ export class ProductService {
     return this.productRepository.find();
   }
 
-  findById(id: number) {
-    return this.productRepository.findOneBy({ id });
+  getWhereByStandId(standId: string) {
+    console.log(standId);
+    return this.productRepository.find();
   }
 
   findByIds(ids: number[]) {

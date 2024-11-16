@@ -1,9 +1,17 @@
 import { CreateProductDto } from '@/dtos/create-product.dto';
 import { ProductService } from '@/services/product.service';
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 
-@Controller('products')
+@Controller('stands/:standId/products')
 export class ProductController {
   constructor(protected readonly productService: ProductService) {}
 
@@ -19,8 +27,11 @@ export class ProductController {
   }
 
   @Get()
-  async getAll(@Res() res: Response) {
-    const data = await this.productService.getAll();
+  async getProductsByStandId(
+    @Param('standId') standId: string,
+    @Res() res: Response,
+  ) {
+    const data = await this.productService.getWhereByStandId(standId);
     return res.json({ data });
   }
 }

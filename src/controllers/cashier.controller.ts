@@ -1,15 +1,27 @@
 import { CreateCashierDto } from '@/dtos/create-cashier.dto';
 import { CashierService } from '@/services/cashier.service';
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 
-@Controller('cashiers')
+@Controller('stands/:standId/cashiers')
 export class CashierController {
   constructor(protected readonly cashierService: CashierService) {}
 
   @Post()
-  async create(@Body() dto: CreateCashierDto, @Res() res: Response) {
-    const data = await this.cashierService.create(dto);
+  async create(
+    @Param('standId') standId: string,
+    @Body() dto: CreateCashierDto,
+    @Res() res: Response,
+  ) {
+    const data = await this.cashierService.create(dto, standId);
     return res.status(HttpStatus.CREATED).json({
       data,
       statusCode: HttpStatus.CREATED,
@@ -19,8 +31,11 @@ export class CashierController {
   }
 
   @Get()
-  async getAll(@Res() res: Response) {
-    const data = await this.cashierService.getAll();
+  async getCashiersByStandId(
+    @Param('standId') standId: string,
+    @Res() res: Response,
+  ) {
+    const data = await this.cashierService.getWhereByStandId(standId);
     return res.json({ data });
   }
 }

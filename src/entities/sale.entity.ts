@@ -5,8 +5,8 @@ import { SaleProduct } from './sale-product.entity';
 
 @Entity()
 export class Sale {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   // @Column({ type: 'decimal', precision: 10, scale: 2 })
   // total_amount: number;

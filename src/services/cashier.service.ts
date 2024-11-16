@@ -16,8 +16,8 @@ export class CashierService {
     protected readonly productService: ProductService,
   ) {}
 
-  async create(dto: CreateCashierDto) {
-    const stand = await this.standService.findById(dto.stand_id);
+  async create(dto: CreateCashierDto, standId: string) {
+    const stand = await this.standService.findById(standId);
 
     if (!stand) {
       throw new BadRequestException('Banca de vendas não encontrada.');
@@ -26,7 +26,7 @@ export class CashierService {
     const cashier = new Cashier();
 
     cashier.stand = stand;
-    cashier.name = dto.name;
+    cashier.description = dto.description;
     cashier.pix_key = dto.pix_key;
     cashier.initial_cash = dto.initial_cash;
     cashier.pix_recipient = dto.pix_recipient;
@@ -34,6 +34,7 @@ export class CashierService {
     cashier.reference_date = dto.reference_date;
     cashier.payment_methods = dto.payment_methods;
     cashier.products_stock = [];
+    dto.products_stock = dto.products_stock ?? [];
 
     const products = await this.productService.findByIds(
       dto.products_stock.map((item) => item.product_id),
@@ -59,7 +60,7 @@ export class CashierService {
     return this.cashierRepository.save(cashier);
   }
 
-  getAll() {
-    return this.cashierRepository.find();
+  getWhereByStandId(stanId: string) {
+    return this.cashierRepository.find({ where: { stand: { id: stanId } } });
   }
 }

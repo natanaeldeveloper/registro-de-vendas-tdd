@@ -11,11 +11,11 @@ import { ProductStock } from './product-stock.entity';
 
 @Entity()
 export class Cashier {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', nullable: true })
-  name: string;
+  description: string;
 
   @Column({ type: 'date' })
   reference_date: Date;

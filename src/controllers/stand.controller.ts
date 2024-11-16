@@ -1,6 +1,14 @@
 import { CreateStandDto } from '@/dtos/create-stand.dto';
 import { StandService } from '@/services/stand.service';
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 
 @Controller('stands')
@@ -21,6 +29,12 @@ export class StandController {
   @Get()
   async getAll(@Res() res: Response) {
     const data = await this.standService.findAll();
+    return res.json({ data });
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string, @Res() res: Response) {
+    const data = await this.standService.findById(id);
     return res.json({ data });
   }
 }

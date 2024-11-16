@@ -8,24 +8,26 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
-  Min,
+  IsOptional,
   MinLength,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 import { CreateProductStockDto } from './create-product-stock.dto';
 
 export class CreateCashierDto {
+  @IsOptional()
   @Transform(({ value }) => value?.trim())
   @MinLength(3)
-  name: string;
+  description: string;
 
   @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
   reference_date: Date;
 
+  @Transform(({ value }) => parseFloat(value))
   @IsNumber()
-  @Min(0)
   initial_cash: number;
 
   @IsBoolean()
@@ -36,18 +38,21 @@ export class CreateCashierDto {
   @IsEnum(PaymentMethods, { each: true })
   payment_methods: PaymentMethods[];
 
+  @ValidateIf((dto: CreateCashierDto) =>
+    dto.payment_methods.includes(PaymentMethods.PIX),
+  )
   @Transform(({ value }) => value?.trim())
   @MinLength(3)
   pix_key: string;
 
+  @ValidateIf((dto: CreateCashierDto) =>
+    dto.payment_methods.includes(PaymentMethods.PIX),
+  )
   @Transform(({ value }) => value?.trim())
   @MinLength(3)
   pix_recipient: string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  stand_id: number;
-
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateProductStockDto)

@@ -3,8 +3,8 @@ import { Cashier } from './cashier.entity';
 
 @Entity()
 export class Stand {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar' })
   name: string;
