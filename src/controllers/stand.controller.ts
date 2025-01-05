@@ -1,12 +1,14 @@
-import { CreateStandDto } from '@/dtos/create-stand.dto';
+import { CreateStandDto, UpdateStandDto } from '@/dtos/stand';
 import { StandService } from '@/services/stand.service';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
   Post,
+  Put,
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -26,6 +28,21 @@ export class StandController {
     });
   }
 
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateStandDto,
+    @Res() res: Response,
+  ) {
+    const data = await this.standService.update(id, dto);
+    return res.status(HttpStatus.OK).json({
+      data,
+      statusCode: HttpStatus.OK,
+      success: 'Created',
+      message: 'Banca de vendas atualizada com sucesso.',
+    });
+  }
+
   @Get()
   async getAll(@Res() res: Response) {
     const data = await this.standService.findAll();
@@ -36,5 +53,11 @@ export class StandController {
   async findById(@Param('id') id: string, @Res() res: Response) {
     const data = await this.standService.findById(id);
     return res.json({ data });
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string, @Res() res: Response) {
+    const data = await this.standService.delete(id);
+    return res.status(HttpStatus.OK).json({ data });
   }
 }

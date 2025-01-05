@@ -39,7 +39,10 @@ export class Cashier {
   @Column({ type: 'varchar', nullable: true })
   pix_recipient: string;
 
-  @ManyToOne(() => Stand, (stand) => stand.cashiers, { nullable: false })
+  @ManyToOne(() => Stand, (stand) => stand.cashiers, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   stand: Stand;
 
   @OneToMany(() => ProductStock, (productStock) => productStock.cashier, {

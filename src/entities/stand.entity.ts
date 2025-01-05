@@ -12,6 +12,6 @@ export class Stand {
   @Column({ type: 'varchar', default: null })
   color: string;
 
-  @OneToMany(() => Cashier, (cashier) => cashier.stand)
+  @OneToMany(() => Cashier, (cashier) => cashier.stand, { cascade: true })
   cashiers: Cashier[];
 }
